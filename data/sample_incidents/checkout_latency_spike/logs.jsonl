@@ -1,0 +1,8 @@
+{"timestamp":"2026-06-15T09:28:12Z","service":"checkout-api","region":"us-west-2","level":"INFO","request_id":"req-1001","message":"Checkout request completed","latency_ms":172,"deployment_id":"deploy-20260615-0930"}
+{"timestamp":"2026-06-15T09:31:44Z","service":"checkout-api","region":"us-west-2","level":"INFO","request_id":"req-1002","message":"Checkout request completed","latency_ms":188,"deployment_id":"deploy-20260615-0930"}
+{"timestamp":"2026-06-15T09:35:09Z","service":"checkout-api","region":"us-west-2","level":"WARN","request_id":"req-1003","message":"Database connection acquisition slower than expected","latency_ms":814,"deployment_id":"deploy-20260615-0930"}
+{"timestamp":"2026-06-15T09:36:27Z","service":"checkout-api","region":"us-west-2","level":"ERROR","request_id":"req-1004","message":"Database connection timeout after 3000ms","latency_ms":3042,"deployment_id":"deploy-20260615-0930"}
+{"timestamp":"2026-06-15T09:37:18Z","service":"checkout-api","region":"us-west-2","level":"ERROR","request_id":"req-1005","message":"Checkout failed because database pool had no available connections","latency_ms":3011,"deployment_id":"deploy-20260615-0930"}
+{"timestamp":"2026-06-15T09:39:02Z","service":"inventory-api","region":"us-west-2","level":"INFO","request_id":"req-2001","message":"Inventory lookup completed","latency_ms":94,"deployment_id":"deploy-20260615-0845"}
+{"timestamp":"2026-06-15T09:40:31Z","service":"checkout-api","region":"us-west-2","level":"ERROR","request_id":"req-1006","message":"Database connection timeout after 3000ms","latency_ms":3068,"deployment_id":"deploy-20260615-0930"}
+

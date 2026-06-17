@@ -1,0 +1,18 @@
+{
+  "incident_id": "checkout_latency_spike",
+  "root_cause": "The checkout-api deployment at 2026-06-15T09:30:00Z likely changed database connection pool settings, causing database connection timeouts and elevated checkout latency.",
+  "expected_confidence": "high",
+  "expected_evidence": [
+    "deployment event deploy-20260615-0930 changed database connection pool settings",
+    "checkout-api p95 latency increased from 190ms to 2870ms after deployment",
+    "checkout-api error rate increased from 0.003 to 0.184 after deployment",
+    "logs include database connection timeout and no available connections",
+    "runbook says database timeouts after deployment should trigger database pool review or rollback"
+  ],
+  "must_not_claim": [
+    "inventory-api caused the incident",
+    "regional outage caused the incident",
+    "payment provider caused the incident"
+  ]
+}
+

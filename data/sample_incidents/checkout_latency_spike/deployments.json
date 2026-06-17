@@ -1,0 +1,15 @@
+[
+  {
+    "timestamp": "2026-06-15T09:30:00Z",
+    "service": "checkout-api",
+    "region": "us-west-2",
+    "deployment_id": "deploy-20260615-0930",
+    "version": "v1.8.2",
+    "change_summary": "Updated database connection pool settings for checkout-api",
+    "changed_files": [
+      "checkout-api/config/database_pool.yaml",
+      "checkout-api/app/db_client.py"
+    ]
+  }
+]
+
