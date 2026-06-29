@@ -1,8 +1,8 @@
 # Step-by-Step Roadmap
 
-This roadmap explains how AI Incident Triage Copilot evolves from a local evidence-loading API into a production-inspired AI incident analysis system.
+This roadmap explains how AI Incident Triage Copilot evolves from a local evidence-loading API into a production-inspired AI incident analysis system with AWS-aware data ingestion, deterministic signal detection, retrieval, grounded LLM analysis, traces, and evaluation.
 
-The project intentionally starts with synthetic data and deterministic backend logic before adding retrieval and LLM generation. This keeps the system testable, debuggable, and grounded in operational evidence.
+The project intentionally starts with synthetic data and deterministic backend logic before adding retrieval and LLM generation. This keeps the system testable, debuggable, and grounded in operational evidence while preserving a path toward CloudWatch-style integrations.
 
 ## Phase 1: Backend Skeleton and Data Boundaries
 
@@ -38,6 +38,7 @@ Build:
 - `GET /incidents/{incident_id}`
 - `GET /incidents/{incident_id}/summary`
 - shared incident loader
+- initial loader abstraction for local fixture data
 
 Evidence types:
 
@@ -61,6 +62,7 @@ Key design decisions:
 
 - Keep API endpoints thin.
 - Put reusable loading logic in shared helpers.
+- Introduce data-source boundaries early so local fixtures can later be replaced by AWS-shaped loaders.
 - Keep summary fields generic enough to work across incident types.
 - Avoid scenario-specific fields such as `has_database_timeout` in generic response models.
 
@@ -103,7 +105,7 @@ Operational facts such as error rate, p95 latency, and deployment timing should 
 
 Goal:
 
-Move from neat incident folders toward a more production-like data shape where logs are mixed.
+Move from neat incident folders toward a more production-like data shape where logs are mixed and data sources are replaceable.
 
 Build:
 
@@ -112,6 +114,9 @@ Build:
 - mixed local metric store
 - mixed local deployment store
 - `POST /incident-query`
+- `LocalIncidentLoader`
+- `CloudWatchLikeIncidentLoader`
+- placeholder `FutureCloudWatchLogsInsightsLoader`
 
 Example query:
 
@@ -136,11 +141,13 @@ Key design decisions:
 - Local folders are benchmark fixtures.
 - Mixed local stores simulate the production reality that logs are not pre-grouped by incident.
 - Filtering by exact structured fields should be deterministic.
-- Future CloudWatch loaders should return the same incident bundle schema.
+- Loader implementations should return the same `IncidentBundle` schema.
+- A CloudWatch-shaped loader can mimic CloudWatch Logs Insights results without requiring AWS credentials.
+- Real CloudWatch integration remains optional until the core triage pipeline is strong.
 
 Why this matters:
 
-In production, an on-call engineer usually starts from an alert, service, region, and time window. The system should gather and filter evidence into an incident bundle before retrieval or AI reasoning.
+In production, an on-call engineer usually starts from an alert, service, region, and time window. The system should gather and filter evidence into an incident bundle before retrieval or AI reasoning. The loader abstraction keeps the triage pipeline independent from whether evidence comes from local fixtures, uploaded files, CloudWatch-shaped data, or real CloudWatch Logs Insights later.
 
 ## Phase 5: Retrieval and Citations
 
@@ -244,7 +251,7 @@ Real incidents are messy. A production-inspired AI system must handle uncertaint
 
 Goal:
 
-Make the AI workflow inspectable.
+Make the AI workflow inspectable and operationally debuggable.
 
 Build:
 
@@ -255,17 +262,21 @@ Build:
 - latency tracking
 - token and cost estimate tracking
 - fallback reason tracking
+- `GET /traces/{trace_id}`
+- optional trace/debug admin view
 
 Trace fields:
 
 - user query
 - incident ID
 - retrieved chunk IDs
+- prompt version
 - prompt
 - model response
 - confidence
 - latency
 - token estimate
+- estimated cost
 - fallback reason
 
 Key design decisions:
@@ -290,6 +301,10 @@ Build:
 - 20-30 eval cases
 - `POST /eval/run`
 - simple eval report
+- retrieval accuracy measurement
+- citation correctness measurement
+- fallback rate measurement
+- root-cause hypothesis match measurement
 
 Failure categories:
 
@@ -298,6 +313,7 @@ Failure categories:
 - citation failure
 - fallback failure
 - format failure
+- root-cause mismatch
 
 Key design decisions:
 
@@ -309,11 +325,11 @@ Why this matters:
 
 AI quality should not be judged only by whether a few demo answers sound good. A small golden set makes improvements more measurable and repeatable.
 
-## Phase 10: Portfolio Packaging
+## Phase 10: AWS-Aware Deployment and Portfolio Packaging
 
 Goal:
 
-Package the project so another engineer or interviewer can understand it.
+Package the project so another engineer or interviewer can understand it, run it, and see how it maps to a cloud-native architecture.
 
 Build:
 
@@ -322,16 +338,20 @@ Build:
 - local setup guide
 - API examples
 - eval methodology
+- deployment notes
+- FastAPI container
+- optional AWS App Runner, ECS Fargate, or Lambda container deployment
+- CloudWatch logging notes
 - resume bullets
 - demo script
 
 Key design decisions:
 
 - Be explicit that the project uses synthetic data.
-- Explain why CloudWatch integration is optional stretch work.
-- Emphasize system design, evidence grounding, traceability, and eval.
+- Explain how local, CloudWatch-shaped, and future CloudWatch loaders fit behind the same incident bundle schema.
+- Emphasize backend design, AWS-aware architecture, evidence grounding, traceability, eval, and deployment tradeoffs.
+- Keep frontend polish optional; the strongest signal is backend + retrieval + eval + observability.
 
 Why this matters:
 
-The final project should not look like a generic RAG chatbot. It should show production-minded backend and AI engineering judgment.
-
+The final project should not look like a generic RAG chatbot. It should show production-minded backend, AWS, and AI engineering judgment: data-source boundaries, deterministic filtering, evidence retrieval, citations, traces, eval, and a credible deployment story.
