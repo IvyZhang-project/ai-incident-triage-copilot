@@ -1,11 +1,15 @@
 from fastapi import FastAPI
 
 from app.incident_analysis import build_baseline_triage, build_incident_summary
-from app.incident_loader import load_incident_bundle
+from app.incident_loader import (
+    load_incident_bundle,
+    load_incident_bundle_from_query,
+)
 from app.models import (
     BaselineTriageResponse,
     HealthResponse,
     IncidentBundleResponse,
+    IncidentQueryRequest,
     IncidentSummaryResponse,
 )
 
@@ -49,4 +53,25 @@ def get_incident_summary(incident_id: str) -> IncidentSummaryResponse:
 )
 def get_baseline_triage(incident_id: str) -> BaselineTriageResponse:
     incident = load_incident_bundle(incident_id)
+    return build_baseline_triage(incident)
+
+
+@app.post(
+    "/incident-query",
+    response_model=IncidentBundleResponse,
+)
+def query_incident(
+    query: IncidentQueryRequest,
+) -> IncidentBundleResponse:
+    return load_incident_bundle_from_query(query)
+
+
+@app.post(
+    "/incident-query/baseline-triage",
+    response_model=BaselineTriageResponse,
+)
+def query_incident_baseline_triage(
+    query: IncidentQueryRequest,
+) -> BaselineTriageResponse:
+    incident = load_incident_bundle_from_query(query)
     return build_baseline_triage(incident)

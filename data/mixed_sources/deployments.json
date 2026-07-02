@@ -1,0 +1,36 @@
+[
+  {
+    "timestamp": "2026-06-15T09:30:00Z",
+    "service": "checkout-api",
+    "region": "us-west-2",
+    "deployment_id": "deploy-20260615-0930",
+    "version": "v1.8.2",
+    "change_summary": "Updated database connection pool settings for checkout-api",
+    "changed_files": [
+      "checkout-api/config/database_pool.yaml",
+      "checkout-api/app/db_client.py"
+    ]
+  },
+  {
+    "timestamp": "2026-06-16T10:00:00Z",
+    "service": "auth-service",
+    "region": "us-west-2",
+    "deployment_id": "deploy-20260616-1000",
+    "version": "v2.4.1",
+    "change_summary": "Rotated token signing key configuration",
+    "changed_files": [
+      "auth-service/config/jwks.yaml"
+    ]
+  },
+  {
+    "timestamp": "2026-06-16T12:00:00Z",
+    "service": "payment-api",
+    "region": "us-east-1",
+    "deployment_id": "deploy-20260616-1200",
+    "version": "v3.1.0",
+    "change_summary": "Updated payment receipt formatting only",
+    "changed_files": [
+      "payment-api/templates/receipt.html"
+    ]
+  }
+]

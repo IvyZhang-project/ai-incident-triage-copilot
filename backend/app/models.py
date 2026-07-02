@@ -44,6 +44,13 @@ class IncidentBundleResponse(BaseModel):
     runbook: str
 
 
+class IncidentQueryRequest(BaseModel):
+    service: str
+    region: str
+    start_time: str
+    end_time: str
+
+
 class IncidentSummaryResponse(BaseModel):
     incident_id: str
     log_count: int
