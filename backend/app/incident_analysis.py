@@ -31,6 +31,11 @@ def build_incident_summary(
 
 def identify_missing_evidence(signals: BaselineSignals) -> list[str]:
     missing_evidence = []
+    has_database_pattern = (
+        "database_connection_timeout" in signals.error_patterns
+        or "connection_pool_exhaustion" in signals.error_patterns
+    )
+    has_downstream_timeout = "downstream_timeout" in signals.error_patterns
 
     if not signals.latency_spike_detected:
         missing_evidence.append("latency_spike")
@@ -41,8 +46,11 @@ def identify_missing_evidence(signals: BaselineSignals) -> list[str]:
     if not signals.error_patterns:
         missing_evidence.append("error_patterns")
 
-    if not signals.deployment_correlation_detected:
+    if has_database_pattern and not signals.deployment_correlation_detected:
         missing_evidence.append("deployment_correlation")
+
+    if has_downstream_timeout:
+        missing_evidence.append("external_provider_status")
 
     return missing_evidence
 
@@ -58,16 +66,34 @@ def determine_evidence_strength(missing_evidence: list[str]) -> str:
 
 
 def build_rule_based_hypothesis(signals: BaselineSignals) -> str:
+    has_database_pattern = (
+        "database_connection_timeout" in signals.error_patterns
+        or "connection_pool_exhaustion" in signals.error_patterns
+    )
+    has_downstream_timeout = "downstream_timeout" in signals.error_patterns
+
     if (
         signals.latency_spike_detected
         and signals.error_rate_spike_detected
-        and signals.error_patterns
+        and has_database_pattern
         and signals.deployment_correlation_detected
     ):
         return (
             "Deployment-related database connection issue is a candidate cause "
             "based on metric spikes, deployment timing, and database connection "
             "error patterns."
+        )
+
+    if (
+        signals.latency_spike_detected
+        and signals.error_rate_spike_detected
+        and has_downstream_timeout
+        and not signals.deployment_correlation_detected
+    ):
+        return (
+            "External provider degradation is a candidate cause based on metric "
+            "spikes, downstream timeout errors, and lack of correlated "
+            "deployment evidence."
         )
 
     return (

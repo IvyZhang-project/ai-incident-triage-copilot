@@ -1,0 +1,17 @@
+{
+  "incident_id": "payment_provider_timeout",
+  "root_cause": "The payment-api incident is likely caused by external payment provider degradation, with elevated provider timeout errors and increased payment authorization latency. There is no correlated deployment evidence in the incident bundle.",
+  "expected_confidence": "medium",
+  "expected_evidence": [
+    "payment-api p95 latency increased from normal values near 245-272ms to 4260ms",
+    "payment-api error rate increased from 0.005 to 0.147",
+    "logs include provider timeout and downstream timeout messages",
+    "deployments.json is empty, so deployment correlation should not be claimed",
+    "runbook recommends checking external payment gateway status and circuit breaker behavior"
+  ],
+  "must_not_claim": [
+    "checkout-api caused the incident",
+    "database connection pool caused the incident",
+    "a recent deployment caused the incident"
+  ]
+}

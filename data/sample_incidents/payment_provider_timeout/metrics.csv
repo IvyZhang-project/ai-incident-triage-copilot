@@ -1,0 +1,11 @@
+timestamp,service,region,metric,value
+2026-06-16T14:00:00Z,payment-api,us-east-1,p95_latency_ms,245
+2026-06-16T14:03:00Z,payment-api,us-east-1,p95_latency_ms,272
+2026-06-16T14:06:00Z,payment-api,us-east-1,p95_latency_ms,1180
+2026-06-16T14:09:00Z,payment-api,us-east-1,p95_latency_ms,3890
+2026-06-16T14:12:00Z,payment-api,us-east-1,p95_latency_ms,4260
+2026-06-16T14:00:00Z,payment-api,us-east-1,error_rate,0.004
+2026-06-16T14:03:00Z,payment-api,us-east-1,error_rate,0.005
+2026-06-16T14:06:00Z,payment-api,us-east-1,error_rate,0.029
+2026-06-16T14:09:00Z,payment-api,us-east-1,error_rate,0.112
+2026-06-16T14:12:00Z,payment-api,us-east-1,error_rate,0.147
