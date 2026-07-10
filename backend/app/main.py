@@ -7,10 +7,19 @@ from app.incident_loader import (
 )
 from app.models import (
     BaselineTriageResponse,
+    EvidenceChunk,
     HealthResponse,
     IncidentBundleResponse,
     IncidentQueryRequest,
     IncidentSummaryResponse,
+    InvestigationEvidenceResponse,
+    RetrievalRequest,
+    RetrievalResponse,
+)
+from app.retrieval import (
+    build_evidence_chunks,
+    retrieve_chunks,
+    retrieve_investigation_evidence,
 )
 
 
@@ -56,6 +65,31 @@ def get_baseline_triage(incident_id: str) -> BaselineTriageResponse:
     return build_baseline_triage(incident)
 
 
+@app.get(
+    "/incidents/{incident_id}/chunks",
+    response_model=list[EvidenceChunk],
+)
+def get_incident_chunks(incident_id: str) -> list[EvidenceChunk]:
+    incident = load_incident_bundle(incident_id)
+    return build_evidence_chunks(incident)
+
+
+@app.get(
+    "/incidents/{incident_id}/investigation-evidence",
+    response_model=InvestigationEvidenceResponse,
+)
+def get_investigation_evidence(
+    incident_id: str,
+) -> InvestigationEvidenceResponse:
+    incident = load_incident_bundle(incident_id)
+    chunks = retrieve_investigation_evidence(incident)
+
+    return InvestigationEvidenceResponse(
+        incident_id=incident.incident_id,
+        chunks=chunks,
+    )
+
+
 @app.post(
     "/incident-query",
     response_model=IncidentBundleResponse,
@@ -75,3 +109,51 @@ def query_incident_baseline_triage(
 ) -> BaselineTriageResponse:
     incident = load_incident_bundle_from_query(query)
     return build_baseline_triage(incident)
+
+
+@app.post(
+    "/incident-query/chunks",
+    response_model=list[EvidenceChunk],
+)
+def query_incident_chunks(
+    query: IncidentQueryRequest,
+) -> list[EvidenceChunk]:
+    incident = load_incident_bundle_from_query(query)
+    return build_evidence_chunks(incident)
+
+
+@app.post(
+    "/incident-query/investigation-evidence",
+    response_model=InvestigationEvidenceResponse,
+)
+def query_investigation_evidence(
+    query: IncidentQueryRequest,
+) -> InvestigationEvidenceResponse:
+    incident = load_incident_bundle_from_query(query)
+    chunks = retrieve_investigation_evidence(incident)
+
+    return InvestigationEvidenceResponse(
+        incident_id=incident.incident_id,
+        chunks=chunks,
+    )
+
+
+@app.post(
+    "/retrieve",
+    response_model=RetrievalResponse,
+)
+def retrieve_incident_chunks(
+    request: RetrievalRequest,
+) -> RetrievalResponse:
+    incident = load_incident_bundle(request.incident_id)
+    chunks = retrieve_chunks(
+        incident=incident,
+        query=request.query,
+        top_k=request.top_k,
+    )
+
+    return RetrievalResponse(
+        incident_id=incident.incident_id,
+        query=request.query,
+        chunks=chunks,
+    )

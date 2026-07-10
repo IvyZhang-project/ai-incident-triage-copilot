@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -80,3 +82,31 @@ class BaselineTriageResponse(BaseModel):
     rule_based_hypothesis: str
     evidence_strength: str
     missing_evidence: list[str]
+
+
+class EvidenceChunk(BaseModel):
+    citation_id: str
+    incident_id: str
+    source_type: str
+    text: str
+    service: Optional[str] = None
+    region: Optional[str] = None
+    timestamp: Optional[str] = None
+    severity: Optional[str] = None
+
+
+class RetrievalRequest(BaseModel):
+    incident_id: str
+    query: str
+    top_k: int = 5
+
+
+class RetrievalResponse(BaseModel):
+    incident_id: str
+    query: str
+    chunks: list[EvidenceChunk]
+
+
+class InvestigationEvidenceResponse(BaseModel):
+    incident_id: str
+    chunks: list[EvidenceChunk]
