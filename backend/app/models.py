@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel
 
@@ -110,3 +110,39 @@ class RetrievalResponse(BaseModel):
 class InvestigationEvidenceResponse(BaseModel):
     incident_id: str
     chunks: list[EvidenceChunk]
+
+
+class TriageAnalysisRequest(BaseModel):
+    incident_id: str
+    top_k: int = 10
+
+
+class IncidentQueryAnalysisRequest(IncidentQueryRequest):
+    top_k: int = 10
+
+
+class TriageAnalysisResponse(BaseModel):
+    incident_id: str
+    summary: str
+    hypothesis: str
+    confidence: str
+    citations: list[str]
+    fallback_reason: Optional[str] = None
+    retrieved_chunk_ids: list[str]
+    trace_id: str
+
+
+class TraceRecord(BaseModel):
+    trace_id: str
+    incident_id: str
+    input_source: str
+    query: Optional[dict[str, Any]] = None
+    retrieved_chunk_ids: list[str]
+    prompt_version: str
+    prompt: str
+    model_output: TriageAnalysisResponse
+    latency_ms: int
+    estimated_input_tokens: int
+    estimated_output_tokens: int
+    estimated_cost_usd: float
+    fallback_reason: Optional[str] = None
