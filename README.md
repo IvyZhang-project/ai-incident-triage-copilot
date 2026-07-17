@@ -6,7 +6,7 @@ The system ingests CloudWatch-style logs, metrics, deployment events, runbooks, 
 
 ## Why This Project Exists
 
-Generic RAG chatbots are easy to build but hard to defend in interviews. This project focuses on the engineering layers that make an AI system more production-like:
+This project focuses on the engineering layers that make an AI system more production-like:
 
 - Clear data boundaries
 - Metadata-aware retrieval
@@ -57,22 +57,6 @@ ai-incident-triage-copilot/
   infra/                Future deployment files
 ```
 
-## Day 1 Status
 
-Current milestone:
-
-- Create project structure
-- Add backend health endpoint
-- Add first synthetic incident dataset
-- Add initial design notes
-
-## Interview Positioning
-
-Instead of saying:
-
-> I built a RAG chatbot using OpenAI and a vector database.
-
-Say:
-
-> I built an AI incident triage system where critical answers are grounded in operational evidence. I designed metadata-aware retrieval, citation-backed generation, fallback behavior for low-confidence cases, trace logging for debugging, and an evaluation set to distinguish retrieval failures from generation failures.
+This is an AI incident triage system where critical answers are grounded in operational evidence. I designed metadata-aware retrieval, citation-backed generation, fallback behavior for low-confidence cases, trace logging for debugging, and an evaluation set to distinguish retrieval failures from generation failures.
 
