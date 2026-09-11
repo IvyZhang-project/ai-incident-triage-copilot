@@ -1,3 +1,4 @@
+import os
 from time import perf_counter
 from typing import Optional
 from uuid import uuid4
@@ -6,8 +7,23 @@ from app.models import TraceRecord, TriageAnalysisResponse
 
 
 TRACE_STORE: dict[str, TraceRecord] = {}
-PROMPT_VERSION = "deterministic-analysis-v1"
+PROMPT_VERSION = "llm-ready-analysis-v1"
 TOKEN_CHARS_PER_TOKEN = 4
+DEFAULT_OPENAI_MODEL = "gpt-4.1-mini"
+TOKEN_PRICES_PER_1M = {
+    "gpt-4.1-mini": {
+        "input": 0.40,
+        "output": 1.60,
+    },
+    "gpt-4.1": {
+        "input": 2.00,
+        "output": 8.00,
+    },
+    "gpt-4.1-nano": {
+        "input": 0.10,
+        "output": 0.40,
+    },
+}
 
 
 def start_timer() -> float:
@@ -29,7 +45,15 @@ def estimate_cost_usd(
     input_tokens: int,
     output_tokens: int,
 ) -> float:
-    return round((input_tokens + output_tokens) * 0.0, 6)
+    model = os.getenv("OPENAI_MODEL", DEFAULT_OPENAI_MODEL)
+    prices = TOKEN_PRICES_PER_1M.get(
+        model,
+        TOKEN_PRICES_PER_1M[DEFAULT_OPENAI_MODEL],
+    )
+    input_cost = input_tokens / 1_000_000 * prices["input"]
+    output_cost = output_tokens / 1_000_000 * prices["output"]
+
+    return round(input_cost + output_cost, 6)
 
 
 def save_trace(

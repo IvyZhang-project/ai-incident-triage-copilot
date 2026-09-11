@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 
+from app.env_loader import load_dotenv
 from app.incident_analysis import build_baseline_triage, build_incident_summary
 from app.incident_loader import (
     load_incident_bundle,
@@ -28,6 +29,8 @@ from app.retrieval import (
 from app.traces import calculate_latency_ms, get_trace, save_trace, start_timer
 from app.triage_analysis import build_analysis_prompt, build_triage_analysis
 
+
+load_dotenv()
 
 app = FastAPI(
     title="AI Incident Triage Copilot API",

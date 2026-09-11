@@ -75,13 +75,30 @@ class BaselineSignals(BaseModel):
     deployment_correlation_detected: bool
 
 
+class EvidenceCoverage(BaseModel):
+    has_logs: bool
+    has_metrics: bool
+    has_deployments: bool
+    has_runbook: bool
+
+
+class EvidenceQuality(BaseModel):
+    level: str
+    coverage: EvidenceCoverage
+    signal_strength: str
+    consistency: str
+    specificity: str
+    time_alignment: str
+    data_gaps: list[str]
+
+
 class BaselineTriageResponse(BaseModel):
     incident_id: str
     affected_services: list[str]
     signals: BaselineSignals
-    rule_based_hypothesis: str
-    evidence_strength: str
-    missing_evidence: list[str]
+    evidence_quality: EvidenceQuality
+    investigation_risk: str
+    rule_based_summary: str
 
 
 class EvidenceChunk(BaseModel):
@@ -130,6 +147,15 @@ class TriageAnalysisResponse(BaseModel):
     fallback_reason: Optional[str] = None
     retrieved_chunk_ids: list[str]
     trace_id: str
+    analysis_source: str
+
+
+class LLMAnalysisOutput(BaseModel):
+    summary: str
+    hypothesis: str
+    confidence: str
+    citations: list[str]
+    fallback_reason: Optional[str] = None
 
 
 class TraceRecord(BaseModel):
