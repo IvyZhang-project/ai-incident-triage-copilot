@@ -1,0 +1,3 @@
+{"timestamp":"2026-06-18T10:12:08Z","service":"inventory-api","region":"us-east-1","level":"INFO","request_id":"req-missing-001","message":"Inventory reservation completed","latency_ms":122,"deployment_id":""}
+{"timestamp":"2026-06-18T10:15:17Z","service":"inventory-api","region":"us-east-1","level":"ERROR","request_id":"req-missing-002","message":"Inventory database connection timeout after 3000ms","latency_ms":3012,"deployment_id":""}
+{"timestamp":"2026-06-18T10:16:03Z","service":"inventory-api","region":"us-east-1","level":"ERROR","request_id":"req-missing-003","message":"Inventory database connection timeout after 3000ms; no metric data was available","latency_ms":3025,"deployment_id":""}

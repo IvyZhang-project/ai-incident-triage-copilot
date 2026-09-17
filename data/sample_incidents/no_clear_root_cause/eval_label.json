@@ -1,0 +1,16 @@
+{
+  "incident_id": "no_clear_root_cause",
+  "root_cause": "No incident or root cause is supported by the available evidence.",
+  "expected_confidence": "low",
+  "expected_evidence": [
+    "checkout-api requests completed normally",
+    "latency remained stable",
+    "error rate remained stable",
+    "there were no deployments"
+  ],
+  "must_not_claim": [
+    "database connection timeout caused the incident",
+    "payment provider timeout caused the incident",
+    "deployment caused the incident"
+  ]
+}

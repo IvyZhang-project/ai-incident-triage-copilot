@@ -1,0 +1,15 @@
+{
+  "incident_id": "missing_runbook_generic_latency",
+  "root_cause": "Unknown. Evidence shows a search-api latency spike and generic upstream dependency errors, but the evidence package lacks runbook context and specific root-cause signals.",
+  "expected_confidence": "low",
+  "expected_evidence": [
+    "search-api p95 latency increased from normal values near 185-201ms to 2410ms",
+    "logs include generic upstream service and dependency response errors",
+    "runbook is missing, so the system should avoid a high-confidence root-cause claim"
+  ],
+  "must_not_claim": [
+    "database connection pool caused the incident",
+    "payment provider caused the incident",
+    "a recent deployment caused the incident"
+  ]
+}

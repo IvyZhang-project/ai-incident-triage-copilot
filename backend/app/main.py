@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 
 from app.env_loader import load_dotenv
+from app.evaluation import build_eval_report
 from app.incident_analysis import build_baseline_triage, build_incident_summary
 from app.incident_loader import (
     load_incident_bundle,
@@ -9,6 +10,8 @@ from app.incident_loader import (
 from app.models import (
     BaselineTriageResponse,
     EvidenceChunk,
+    EvalRunRequest,
+    EvalRunResponse,
     HealthResponse,
     IncidentBundleResponse,
     IncidentQueryRequest,
@@ -279,3 +282,14 @@ def get_trace_record(trace_id: str) -> TraceRecord:
         raise HTTPException(status_code=404, detail="Trace not found")
 
     return trace
+
+
+@app.post(
+    "/eval/run",
+    response_model=EvalRunResponse,
+)
+def run_eval(
+    request: EvalRunRequest,
+) -> EvalRunResponse:
+    """Run the local golden-set evaluation for retrieval and optional analysis."""
+    return build_eval_report(request)

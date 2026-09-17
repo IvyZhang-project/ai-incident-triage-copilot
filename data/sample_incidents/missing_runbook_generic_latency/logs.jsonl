@@ -1,0 +1,6 @@
+{"timestamp":"2026-06-17T10:00:15Z","service":"search-api","region":"us-west-2","level":"INFO","request_id":"srch-4001","message":"Search request completed","latency_ms":181,"deployment_id":"deploy-20260617-0800"}
+{"timestamp":"2026-06-17T10:03:22Z","service":"search-api","region":"us-west-2","level":"INFO","request_id":"srch-4002","message":"Search request completed","latency_ms":194,"deployment_id":"deploy-20260617-0800"}
+{"timestamp":"2026-06-17T10:06:41Z","service":"search-api","region":"us-west-2","level":"WARN","request_id":"srch-4003","message":"Request latency above warning threshold","latency_ms":852,"deployment_id":"deploy-20260617-0800"}
+{"timestamp":"2026-06-17T10:08:09Z","service":"search-api","region":"us-west-2","level":"ERROR","request_id":"srch-4004","message":"Request failed with upstream service error","latency_ms":2240,"deployment_id":"deploy-20260617-0800"}
+{"timestamp":"2026-06-17T10:09:37Z","service":"search-api","region":"us-west-2","level":"ERROR","request_id":"srch-4005","message":"Request failed while waiting for dependency response","latency_ms":2395,"deployment_id":"deploy-20260617-0800"}
+{"timestamp":"2026-06-17T10:12:04Z","service":"search-api","region":"us-west-2","level":"WARN","request_id":"srch-4006","message":"Dependency response slower than expected","latency_ms":1760,"deployment_id":"deploy-20260617-0800"}

@@ -1,0 +1,120 @@
+[
+  {
+    "name": "checkout latency spike should retrieve database and deployment evidence",
+    "incident_id": "checkout_latency_spike",
+    "expected_retrieval_terms": [
+      "database connection timeout",
+      "no available connections",
+      "p95_latency_ms=2870",
+      "connection pool"
+    ],
+    "expected_answer_terms": [
+      "database",
+      "connection",
+      "latency"
+    ],
+    "forbidden_answer_terms": [
+      "payment provider",
+      "regional outage",
+      "inventory-api caused"
+    ],
+    "expected_fallback": false
+  },
+  {
+    "name": "payment provider timeout should not claim deployment root cause",
+    "incident_id": "payment_provider_timeout",
+    "expected_retrieval_terms": [
+      "provider timeout",
+      "p95_latency_ms=4260",
+      "external payment gateway",
+      "Downstream timeout from payment provider"
+    ],
+    "expected_answer_terms": [
+      "payment",
+      "provider",
+      "timeout"
+    ],
+    "forbidden_answer_terms": [
+      "database connection pool",
+      "recent deployment",
+      "checkout-api caused"
+    ],
+    "expected_fallback": false
+  },
+  {
+    "name": "missing runbook generic latency should trigger conservative fallback",
+    "incident_id": "missing_runbook_generic_latency",
+    "expected_retrieval_terms": [
+      "Request failed with upstream service error",
+      "Request failed while waiting for dependency response",
+      "p95_latency_ms=2410"
+    ],
+    "expected_answer_terms": [
+      "search-api",
+      "latency"
+    ],
+    "forbidden_answer_terms": [
+      "database connection pool",
+      "payment provider",
+      "recent deployment"
+    ],
+    "expected_fallback": true
+  },
+  {
+    "name": "conflicting evidence should preserve both hypotheses and lower confidence",
+    "incident_id": "conflicting_evidence_case",
+    "expected_retrieval_terms": [
+      "Database connection timeout",
+      "Payment provider timeout",
+      "p95_latency_ms=3180",
+      "unrelated logging configuration"
+    ],
+    "expected_answer_terms": [
+      "checkout-api",
+      "timeout"
+    ],
+    "forbidden_answer_terms": [
+      "confirmed database root cause",
+      "confirmed payment provider root cause",
+      "deployment caused the incident"
+    ],
+    "expected_fallback": true
+  },
+  {
+    "name": "missing metrics should expose a data gap and avoid a confirmed cause",
+    "incident_id": "missing_metrics_case",
+    "expected_retrieval_terms": [
+      "Inventory database connection timeout",
+      "no metric data was available",
+      "database connectivity"
+    ],
+    "expected_answer_terms": [
+      "inventory-api",
+      "database"
+    ],
+    "forbidden_answer_terms": [
+      "metric spike confirms",
+      "deployment caused the incident",
+      "payment provider"
+    ],
+    "expected_fallback": true
+  },
+  {
+    "name": "healthy traffic should not be diagnosed as an incident root cause",
+    "incident_id": "no_clear_root_cause",
+    "expected_retrieval_terms": [
+      "Checkout request completed normally",
+      "p95_latency_ms=188",
+      "No active incident signals"
+    ],
+    "expected_answer_terms": [
+      "checkout-api"
+    ],
+    "forbidden_answer_terms": [
+      "database connection timeout",
+      "payment provider timeout",
+      "deployment caused"
+    ],
+    "expected_fallback": true
+  }
+]

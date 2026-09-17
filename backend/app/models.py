@@ -148,6 +148,7 @@ class TriageAnalysisResponse(BaseModel):
     retrieved_chunk_ids: list[str]
     trace_id: str
     analysis_source: str
+    llm_failure_code: Optional[str] = None
 
 
 class LLMAnalysisOutput(BaseModel):
@@ -156,6 +157,12 @@ class LLMAnalysisOutput(BaseModel):
     confidence: str
     citations: list[str]
     fallback_reason: Optional[str] = None
+
+
+class LLMGenerationResult(BaseModel):
+    output: Optional[LLMAnalysisOutput] = None
+    failure_code: Optional[str] = None
+    failure_message: Optional[str] = None
 
 
 class TraceRecord(BaseModel):
@@ -172,3 +179,42 @@ class TraceRecord(BaseModel):
     estimated_output_tokens: int
     estimated_cost_usd: float
     fallback_reason: Optional[str] = None
+    llm_failure_code: Optional[str] = None
+
+
+class EvalRunRequest(BaseModel):
+    incident_ids: Optional[list[str]] = None
+    top_k: int = 10
+    run_analysis: bool = False
+
+
+class EvalCase(BaseModel):
+    name: str
+    incident_id: str
+    expected_retrieval_terms: list[str]
+    expected_answer_terms: list[str]
+    forbidden_answer_terms: list[str]
+    expected_fallback: bool = False
+
+
+class EvalCaseResult(BaseModel):
+    name: str
+    incident_id: str
+    retrieval_score: float
+    retrieval_terms_found: list[str]
+    retrieval_terms_missing: list[str]
+    citation_correct: Optional[bool] = None
+    answer_terms_found: list[str]
+    answer_terms_missing: list[str]
+    forbidden_terms_found: list[str]
+    fallback_triggered: Optional[bool] = None
+    failure_categories: list[str]
+
+
+class EvalRunResponse(BaseModel):
+    total_cases: int
+    retrieval_accuracy: float
+    citation_correctness: Optional[float] = None
+    fallback_rate: Optional[float] = None
+    answer_match_rate: Optional[float] = None
+    results: list[EvalCaseResult]

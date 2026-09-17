@@ -1,0 +1,15 @@
+{
+  "incident_id": "conflicting_evidence_case",
+  "root_cause": "Unknown. Database and payment-provider failures overlap, and the nearby logging-only deployment does not explain either failure.",
+  "expected_confidence": "medium",
+  "expected_evidence": [
+    "database connection timeout and payment provider timeout appear in the same window",
+    "latency and error rate spike during the dependency errors",
+    "the nearby deployment only changed logging configuration"
+  ],
+  "must_not_claim": [
+    "database is the confirmed root cause",
+    "payment provider is the confirmed root cause",
+    "deployment caused the incident"
+  ]
+}

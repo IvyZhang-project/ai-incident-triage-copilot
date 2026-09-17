@@ -93,9 +93,6 @@ def determine_specificity(signals: BaselineSignals) -> str:
     if signals.error_patterns:
         return "strong"
 
-    if signals.latency_spike_detected or signals.error_rate_spike_detected:
-        return "medium"
-
     return "weak"
 
 
@@ -118,6 +115,18 @@ def determine_time_alignment(signals: BaselineSignals) -> str:
 
 
 def determine_consistency(signals: BaselineSignals) -> str:
+    has_database_pattern = any(
+        pattern in signals.error_patterns
+        for pattern in [
+            "database_connection_timeout",
+            "connection_pool_exhaustion",
+        ]
+    )
+    has_downstream_pattern = "downstream_timeout" in signals.error_patterns
+
+    if has_database_pattern and has_downstream_pattern:
+        return "weak"
+
     if (
         signals.latency_spike_detected
         and signals.error_rate_spike_detected
@@ -160,6 +169,12 @@ def determine_evidence_quality_level(
     score -= len(data_gaps)
 
     if score >= 10:
+        if consistency == "weak":
+            return "medium"
+
+        if data_gaps and specificity == "weak":
+            return "medium"
+
         return "strong"
 
     if score >= 6:

@@ -216,7 +216,9 @@ def build_triage_analysis(
     retrieved_chunks = retrieve_investigation_evidence(incident, top_k=top_k)
     retrieved_chunk_ids = select_citation_ids(retrieved_chunks)
     prompt = build_analysis_prompt(incident, retrieved_chunks)
-    llm_output = generate_llm_analysis(prompt)
+    llm_result = generate_llm_analysis(prompt)
+    llm_output = llm_result.output
+    llm_failure_code = llm_result.failure_code
 
     if llm_output is None:
         analysis_source = "deterministic_fallback"
@@ -225,6 +227,7 @@ def build_triage_analysis(
             rule_based_summary=baseline.rule_based_summary,
             evidence_quality_level=baseline.evidence_quality.level,
             retrieved_chunk_ids=retrieved_chunk_ids,
+            validation_failure_reason=llm_result.failure_message,
         )
     else:
         analysis_source = "llm"
@@ -235,6 +238,7 @@ def build_triage_analysis(
         )
         if analysis_output is None:
             analysis_source = "deterministic_fallback"
+            llm_failure_code = "citation_validation_error"
             analysis_output = build_deterministic_analysis_output(
                 incident=incident,
                 rule_based_summary=baseline.rule_based_summary,
@@ -255,4 +259,5 @@ def build_triage_analysis(
         retrieved_chunk_ids=retrieved_chunk_ids,
         trace_id=new_trace_id(),
         analysis_source=analysis_source,
+        llm_failure_code=llm_failure_code,
     )

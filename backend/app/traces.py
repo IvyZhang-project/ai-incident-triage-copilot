@@ -81,6 +81,7 @@ def save_trace(
         estimated_output_tokens=output_tokens,
         estimated_cost_usd=estimate_cost_usd(input_tokens, output_tokens),
         fallback_reason=analysis.fallback_reason,
+        llm_failure_code=analysis.llm_failure_code,
     )
     TRACE_STORE[analysis.trace_id] = trace
 

@@ -1,0 +1,15 @@
+{
+  "incident_id": "missing_metrics_case",
+  "root_cause": "A database connectivity issue is a candidate cause, but missing metrics prevent confirmation.",
+  "expected_confidence": "low",
+  "expected_evidence": [
+    "inventory-api logs contain repeated database connection timeouts",
+    "the metrics dataset is empty",
+    "there was no nearby deployment"
+  ],
+  "must_not_claim": [
+    "metrics confirm a database outage",
+    "deployment caused the incident",
+    "payment provider caused the incident"
+  ]
+}
