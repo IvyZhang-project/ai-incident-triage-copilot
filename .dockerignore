@@ -1,0 +1,13 @@
+.git
+.gitignore
+.DS_Store
+.env
+.env.*
+.venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+docs
+frontend
+infra
+reports

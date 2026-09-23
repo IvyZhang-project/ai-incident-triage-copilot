@@ -1,38 +1,45 @@
 # Local Setup
 
-## Current Status
+## Install
 
-The project skeleton exists, but Python dependencies are not installed yet.
+From the repository root:
 
-## Backend Setup
-
-From the project root:
-
-```text
-cd backend
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
+pip install -r backend/requirements-dev.txt
+cp .env.example .env
 ```
 
-Then open:
+Set `OPENAI_API_KEY` in `.env` only when running full LLM analysis. Retrieval,
+deterministic fallback, and the default test suite work without it.
 
-```text
-http://localhost:8000/health
+## Run
+
+```bash
+cd backend
+../.venv/bin/uvicorn app.main:app --reload
 ```
 
-Expected response:
+Verify `http://localhost:8000/health` or open
+`http://localhost:8000/docs` for the generated API interface.
 
-```json
-{
-  "status": "ok",
-  "service": "ai-incident-triage-copilot",
-  "version": "0.1.0"
-}
+## Test
+
+From the repository root:
+
+```bash
+./.venv/bin/python -m pytest -q
 ```
 
-## Why We Use a Virtual Environment
+The default suite is offline and does not call OpenAI.
 
-A virtual environment keeps this project's Python packages separate from your computer's global Python installation.
+## Generate Evaluation Reports
 
+```bash
+cd backend
+../.venv/bin/python -m app.eval_report
+../.venv/bin/python -m app.eval_report --run-analysis
+```
+
+The second command uses the configured OpenAI API and incurs API usage.
