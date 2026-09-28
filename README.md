@@ -245,8 +245,3 @@ docs/               Public project and setup documentation
 infra/              Container and AWS deployment guidance
 reports/            Persistent retrieval and full-analysis eval reports
 ```
-
-## Portfolio Notes
-
-See [docs/portfolio-notes.md](docs/portfolio-notes.md) for resume bullets, a
-two-minute project explanation, technical tradeoffs, and honest limitations.
